@@ -144,4 +144,5 @@ void SysTick_Handler(void)
         OSTimeTick();
         OSIntExit();
     }
+    delay_decrement();
 }

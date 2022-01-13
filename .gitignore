@@ -1,11 +1,12 @@
 # keil file 
-app/Project/MDK-ARM/list/
-app/Project/MDK-ARM/Listings/
-app/Project/MDK-ARM/objects/
-app/Project/MDK-ARM/RTE/
-app/Project/MDK-ARM/JLinkLog.txt
-app/Project/MDK-ARM/Project.uvgui*
+application/app/project/MDK-ARM/list/
 
+application/app/project/MDK-ARM/objects/
+application/app/project/MDK-ARM/RTE/
+application/app/project/MDK-ARM/JLinkLog.txt
+
+application/app/project/MDK-ARM/dustbin.uvguix*
+application/app/project/MDK-ARM/Listings/
 # Prerequisites
 *.d
 source3.5

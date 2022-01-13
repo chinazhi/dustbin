@@ -82,6 +82,7 @@ void app_task_start(void *pvParameters)
     bsp_gpo_init(LED_COM);
     bsp_gpo_init(LED_ERROR);
     bsp_uart0_init();
+    ds18b20_init();
 
     OSTaskCreate((OS_TCB *)&app_task_state_tcb,
                  (CPU_CHAR *)"monitoring application status",
@@ -121,7 +122,8 @@ void app_task_state(void *pvParameters)
         bsp_gpo_toggle(LED_A2);
         bsp_gpo_toggle(LED_ERROR);
         bsp_gpo_toggle(LED_COM);
-        OSTimeDlyHMSM(0, 0, 1, 0, OS_OPT_TIME_PERIODIC, &err);
+        ds18b20_read_temp();
+        OSTimeDlyHMSM(0, 0, 3, 0, OS_OPT_TIME_PERIODIC, &err);
     }
 }
 

@@ -59,6 +59,7 @@
 */
 
 #include  <bsp.h>
+#include "systick.h"
 #include "gd32f30x.h"
 #include "gd32f30x_it.h"
 
@@ -66,5 +67,6 @@
 #include "main.h"
 #include "bsp_uart.h"
 #include "bsp_gpio.h"
+#include "bsp_bs18b20.h"
 
 #endif
