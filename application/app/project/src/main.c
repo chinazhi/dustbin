@@ -76,11 +76,11 @@ void app_task_start(void *pvParameters)
 
     OSStatTaskCPUUsageInit((OS_ERR *)&err);
     
-    bsp_gpo_init(LED_A0);
-    bsp_gpo_init(LED_A1);
-    bsp_gpo_init(LED_A2);
-    bsp_gpo_init(LED_COM);
-    bsp_gpo_init(LED_ERROR);
+//    bsp_gpo_init(LED_A0);
+//    bsp_gpo_init(LED_A1);
+//    bsp_gpo_init(LED_A2);
+//    bsp_gpo_init(LED_COM);
+//    bsp_gpo_init(LED_ERROR);
     bsp_uart0_init();
     ds18b20_init();
 
@@ -106,6 +106,8 @@ void app_task_start(void *pvParameters)
     }
 }
 
+float my_temp;
+
 /**
  * @brief task
  * 
@@ -114,16 +116,16 @@ void app_task_start(void *pvParameters)
 void app_task_state(void *pvParameters)
 {
     OS_ERR err;
-
+    
     while (1)
     {
-        bsp_gpo_toggle(LED_A0);
-        bsp_gpo_toggle(LED_A1);
-        bsp_gpo_toggle(LED_A2);
-        bsp_gpo_toggle(LED_ERROR);
-        bsp_gpo_toggle(LED_COM);
-        ds18b20_read_temp();
-        OSTimeDlyHMSM(0, 0, 3, 0, OS_OPT_TIME_PERIODIC, &err);
+//        bsp_gpo_toggle(LED_A0);
+//        bsp_gpo_toggle(LED_A1);
+//        bsp_gpo_toggle(LED_A2);
+//        bsp_gpo_toggle(LED_ERROR);
+//        bsp_gpo_toggle(LED_COM);
+        my_temp = ds18b20_read_temp();
+        OSTimeDlyHMSM(0, 0, 1, 0, OS_OPT_TIME_PERIODIC, &err);
     }
 }
 

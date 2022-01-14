@@ -32,7 +32,7 @@ void delay_us(int data)
     int i = 0;
     for (i = 0; i < data; i++)
     {
-        //_nop_();
+       __NOP();
     }
     return;
 }
@@ -56,7 +56,7 @@ int ds18b20_init(void)
     DS18B20_INPUT_MODE();  // 进入输入模式
     while (DS18B20_IN_READ() == 1)
     { //收到低电平则存在，否则循环5ms告诉不存在,应答是在60-240微秒
-        delay_1ms(1);
+        delay_us(1000);
         i++;
         if (i > 5)
         {
@@ -122,7 +122,7 @@ unsigned char ds18b20_read_byte(void)
 void ds18b20_change_temp()
 {
     ds18b20_init();
-    delay_1ms(1);
+    delay_us(1000);
     ds18b20_write_byte(0xcc); //跳过ROM直接发送温度转换命令
     ds18b20_write_byte(0x44); //发送指令RAM设为0x44为温度变换
 }
@@ -130,7 +130,7 @@ void ds18b20_change_temp()
 void ds18b20_read_temp_com()
 {
     ds18b20_init();
-    delay_1ms(1);
+    delay_us(1000);
     ds18b20_write_byte(0xcc); //跳过ROM直接发送温度转换命令
     ds18b20_write_byte(0xbe); //发送指令RAM设为0xBE为读暂时寄存器
 }
