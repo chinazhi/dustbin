@@ -14,6 +14,40 @@
 #include "gd32f30x.h"
 #include "bsp_uart.h"
 
+
+/**
+ * @brief Serial port sends a byte
+ * 
+ * @param[in] usart_periph 
+ * @param[in] ch 
+ */
+void usart_send_byte(uint32_t usart_periph, uint8_t ch)
+{
+    /* Sends a byte of data to the USART*/
+    usart_data_transmit(usart_periph, ch);
+
+    /* Wait for the send data register to be empty */
+    while (RESET == usart_flag_get(usart_periph, USART_FLAG_TBE));
+}
+
+/**
+ * @brief Serial port sends multiple bytes
+ * 
+ * @param[in] pucStr Data to be sent
+ * @param[in] ulNum  Length to be sent
+ */
+void uart_send_str_pack(uint32_t usart_periph, char const *pucStr, uint16_t ulNum)
+{
+    uint32_t i;
+
+    for (i = 0; i < ulNum; i++)
+    {
+        /* Sends the specified byte of data */
+        usart_send_byte(usart_periph, *pucStr++);
+    }
+}
+
+
 void bsp_uart0_init(void)
 {
     /* enable GPIO clock */
