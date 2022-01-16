@@ -15,6 +15,7 @@
 
 void bsp_uart0_init(void);
 
+void bsp_uart1_init(void);
 
 int fputc(int ch, FILE *f);
 

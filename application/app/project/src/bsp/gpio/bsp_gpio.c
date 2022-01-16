@@ -28,6 +28,7 @@ bsp_gpiox_param_t bsp_gpo_param[] =
     {GPO2_CLK, GPO2_PORT, GPO2_PIN, GPO2_VALUE, GPO2_OTYPE},
     {GPO3_CLK, GPO3_PORT, GPO3_PIN, GPO3_VALUE, GPO3_OTYPE},
     {GPO4_CLK, GPO4_PORT, GPO4_PIN, GPO4_VALUE, GPO4_OTYPE},
+    {GPO5_CLK, GPO5_PORT, GPO5_PIN, GPO5_VALUE, GPO5_OTYPE},
     {(rcu_periph_enum)0, 0, 0, 0, 0}
 };
 

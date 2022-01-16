@@ -42,6 +42,15 @@
 #define GPO4_VALUE                BSP_GPO_HI
 #define GPO4_OTYPE                GPIO_MODE_OUT_OD
 
+#define RS485_EN                  5 
+#define GPO5_CLK                  RCU_GPIOA        
+#define GPO5_PORT                 GPIOA
+#define GPO5_PIN                  GPIO_PIN_11
+#define GPO5_VALUE                BSP_GPO_HI
+#define GPO5_OTYPE                GPIO_MODE_OUT_OD
+
+
+
 /**
  * @brief init the specified gpo 
  * 
