@@ -39,10 +39,19 @@ void systick_config(void)
 */
 void delay_1ms(uint32_t count)
 {
-    delay = count;
-
-    while(0U != delay){
+    unsigned char i, j, k;
+    for (i = 288; i > 0; i--)
+    {
+        for (j = 10; j > 0; j--)
+        {
+            for (k = count; j > 0; j--)
+                ;
+        }
     }
+    // delay = count;
+
+    // while(0U != delay){
+    // }
 }
 
 /*!

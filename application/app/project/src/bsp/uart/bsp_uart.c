@@ -97,9 +97,6 @@ void bsp_uart1_init(void)
     return ;
 }
 
-
-
-
 /* retarget the C library printf function to the USART */
 int fputc(int ch, FILE *f)
 {

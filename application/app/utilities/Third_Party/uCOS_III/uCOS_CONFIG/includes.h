@@ -68,5 +68,8 @@
 #include "bsp_uart.h"
 #include "bsp_gpio.h"
 #include "bsp_bs18b20.h"
+#include "bsp_adc.h"
+
+
 
 #endif
