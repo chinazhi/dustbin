@@ -12,6 +12,20 @@
  */
 
 #include "includes.h"
+#include "systick.h"
+
+#define CS123X_CLK1                 RCU_GPIOE
+#define CS123X_DOUT_PORT1           GPIOE
+#define CS123X_DOUT_PIN1            GPIO_PIN_0
+#define CS123X_DOUT_VALUE1          BSP_GPO_HI
+#define CS123X_DOUT_OUT_TYPE1       GPIO_MODE_OUT_PP
+#define CS123X_DOUT_IN_TYPE1        GPIO_MODE_IPU
+
+#define CS123X_SCLK_PORT1           GPIOE
+#define CS123X_SCLK_PIN1            GPIO_PIN_1
+#define CS123X_SCLK_VALUE1          BSP_GPO_HI
+#define CS123X_SCLK_OUT_TYPE1       GPIO_MODE_OUT_PP
+#define CS123X_SCLK_IN_TYPE1        GPIO_MODE_IPU
 
 //#define CS1238_DEBUG 1 // 释放注释开启打印
 
@@ -19,15 +33,15 @@
 #define SCLK_GPIO_PIN 2 ///< 模拟时钟脚
 
 /* 时钟脚 输出模式下 高低控制 */
-#define IO_CLK_AD_H() nrf_gpio_pin_set(SCLK_GPIO_PIN)
-#define IO_CLK_AD_L() nrf_gpio_pin_clear(SCLK_GPIO_PIN)
+#define IO_CLK_AD_H() gpio_bit_write(CS123X_SCLK_PORT1, CS123X_SCLK_PIN1, SET)
+#define IO_CLK_AD_L() gpio_bit_write(CS123X_SCLK_PORT1, CS123X_SCLK_PIN1, RESET)
 
 /* 数据脚 输出模式下 高低控制 */
-#define IO_DATA_AD_H() nrf_gpio_pin_set(DOUT_GPIO_PIN)
-#define IO_DATA_AD_L() nrf_gpio_pin_clear(DOUT_GPIO_PIN)
+#define IO_DATA_AD_H() gpio_bit_write(CS123X_DOUT_PORT1, CS123X_DOUT_PIN1, SET)
+#define IO_DATA_AD_L() gpio_bit_write(CS123X_DOUT_PORT1, CS123X_DOUT_PIN1, RESET)
 
 /* 数据脚 输入模式下 读取的数值 */
-#define GET_IO_AD_DATA nrf_gpio_pin_read(DOUT_GPIO_PIN)
+#define GET_IO_AD_DATA gpio_input_bit_get(CS123X_DOUT_PORT1, CS123X_DOUT_PIN1)
 
 // 限幅平均滤波法
 #define FILTER_MAX 10000	// 限幅滤波最大值
@@ -58,7 +72,7 @@ operation_cs1238_state  cs1238_state;
  */
 void set_dout_mode_in(void)
 {
-	nrf_gpio_cfg_input(DOUT_GPIO_PIN, NRF_GPIO_PIN_PULLUP);
+	gpio_init(CS123X_DOUT_PORT1, CS123X_DOUT_IN_TYPE1, GPIO_OSPEED_50MHZ, CS123X_DOUT_PIN1);
 }
 
 /**
@@ -67,7 +81,7 @@ void set_dout_mode_in(void)
  */
 void set_dout_mode_out(void)
 {
-	nrf_gpio_cfg_output(DOUT_GPIO_PIN);
+    gpio_init(CS123X_DOUT_PORT1, CS123X_DOUT_OUT_TYPE1, GPIO_OSPEED_50MHZ, CS123X_DOUT_PIN1);
 }
 
 /**
@@ -76,7 +90,7 @@ void set_dout_mode_out(void)
  */
 void set_sclk_mode_out(void)
 {
-	nrf_gpio_cfg_output(SCLK_GPIO_PIN);
+    gpio_init(CS123X_SCLK_PORT1, CS123X_SCLK_OUT_TYPE1, GPIO_OSPEED_50MHZ, CS123X_SCLK_PIN1);
 	IO_CLK_AD_L();
 }
 
@@ -86,7 +100,7 @@ void set_sclk_mode_out(void)
  */
 void sclk_delay(void)
 {
-	nrf_delay_us(3);
+    delay_1us(3);
 }
 
 /**
@@ -116,7 +130,7 @@ int32_t read_cs1238_ad_data(void)
 
 	while (GET_IO_AD_DATA != 0) //等待芯片准备好 为低电平
 	{
-		nrf_delay_ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
+		delay_1ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
 		bit_cout++;
 		if (bit_cout > 300) //这里的300 是最慢时所需要的数据建立时间为300ms
 		{
@@ -171,7 +185,7 @@ int set_cs1238_config(uint8_t ad_reg)
 
 	while (GET_IO_AD_DATA != 0) //等待芯片准备好 为低电平
 	{
-		nrf_delay_ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
+		delay_1ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
 		bit_cout++;
 		if (bit_cout > 300)
 		{
@@ -247,7 +261,7 @@ int read_cs1238_config(void)
 
 	while (GET_IO_AD_DATA != 0) //等待芯片准备好 为低电平
 	{
-		nrf_delay_ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
+		delay_1ms(1); //定时查询的方法需要缩短查询间隔 例如:1ms~5ms
 		bit_cout++;
 		if (bit_cout > 300)
 		{
@@ -374,199 +388,13 @@ int filter_adc2(int32_t read_data)
 }
 
 /**
- * @brief 计算偏置值
- * 
- */
-void compute_up_bias(void)
-{
-  int32_t relative_adc1, relative_adc2, relative_average;
-
-  // 计算传感器的相对增加量
-  relative_adc1 = g_load_info.adc1_data - ram_flash_data.single_adc1;
-  relative_adc2 = g_load_info.adc2_data - ram_flash_data.single_adc2;
-  relative_average = g_load_info.average_ad - ram_flash_data.no_load_ad;
-
-  // 平均相对增加量 小于400/AD 不进行计算 重量过轻 无实际意义
-  if(relative_average < 400)
-  {
-    g_load_info.up_bias = 0;
-    return ;
-  }
-
-  // 计算偏置率 
-  if( relative_adc1 > relative_average) // 右偏置
-  {
-    g_load_info.up_bias = ((relative_adc1 - relative_average)*100)/relative_average;
-  }
-
-  if(relative_adc2 > relative_average)	// 左偏置
-  {
-    g_load_info.up_bias = (((relative_adc2 - relative_average)*100)/relative_average) * (-1);
-  }
-  
-  // 限制偏置率最大值
-  if(g_load_info.up_bias > 99) 
-  {
-    g_load_info.up_bias = 99;
-  }
-  else if(g_load_info.up_bias < -99)
-  {
-    g_load_info.up_bias = -99;
-  }
-  #ifdef CS1238_DEBUG
-  printf("up_bias %d %d\n",  g_load_info.up_bias, relative_average);
-  #endif
-
-}
-
-/**
- * @brief 传感器异常监测
- * 
- * @param[in] data 
- * @param[in] adc_num 
- */
-void compute_sensor_error(int data, int adc_num)
-{
-  if(adc_num == 1)
-  {
-    #ifdef CS1238_DEBUG
-    printf("data_temp a: %d %d\n", data, error_adc1);
-    #endif
-    if (abs(data) > error_adc1)            // adc1超出最大值
-    {
-      error_adc1_num++;                    // 错误次数+1
-      if (error_adc1_num > 5)              // 5次后认为传感器异常
-      {
-        g_load_info.sensor_state = 1;
-        error_adc1_num = 0;
-        right_adc1_num = 0;
-      }
-    }
-    else if(g_load_info.sensor_state != 2) // ADC1 正常且 ADC2 也正常
-    {
-      g_load_info.sensor_state = 0;        // 认为传感器正常
-      error_adc1_num = 0;
-      if(right_adc1_num < 10)              // 10 次正常后 开启限幅滤波限制
-      {
-        right_adc1_num++;
-      }
-    }
-  }
-  else if(adc_num == 2)
-  {
-    #ifdef CS1238_DEBUG
-    printf("data_temp b: %d %d\n", data, error_adc2);
-    #endif
-    if(abs(data) > error_adc2)
-    {
-      error_adc2_num++;
-      if (error_adc2_num > 4)
-      {
-        g_load_info.sensor_state = 2;
-        error_adc2_num = 0;
-        right_adc2_num = 0;
-      }
-    }
-    else if(g_load_info.sensor_state != 1)
-    {
-      g_load_info.sensor_state = 0;
-      error_adc2_num = 0;
-      if(right_adc2_num < 10)
-      {
-        right_adc2_num++;
-      }
-    }
-  }
-}
-
-/**
- * @brief 计算工作循环 
- * 
- */
-void compute_work_cycle(void)
-{
-  if((g_load_info.real_load > ram_flash_data.cycle_load[0]) && (g_load_info.real_load < ram_flash_data.load_alarm*2 ))
-  {
-    // 循环开始 初始化数值
-    if(work_cycle_start_flag == 0)
-    {
-      work_cycle_start_flag = 1;
-      g_load_info.work_data.cycle_info = 0;   
-      g_load_info.work_data.max_load = 0;
-      g_load_info.work_data.max_up_bias = 0;
-      g_load_info.work_data.up_state = 0;
-      g_load_info.work_data.end_time = 0;
-      g_load_info.work_data.start_time = g_device_info.running_time;
-    }
-    // 记录循环期间最大值
-    if(g_load_info.work_data.max_load < g_load_info.real_load)
-    {
-      g_load_info.work_data.max_load = g_load_info.real_load;
-    }
-    if(g_load_info.work_data.max_up_bias < g_load_info.up_bias)
-    {
-      g_load_info.work_data.max_up_bias = g_load_info.up_bias;
-    }
-    if(g_load_info.work_data.up_state == 0)
-    {
-      g_load_info.work_data.up_state = g_load_info.up_state;
-    }
-  }
-  else if (g_load_info.real_load < ram_flash_data.cycle_load[1])
-  {
-    // 循环结束 
-    if(work_cycle_start_flag == 1)
-    {
-      work_cycle_start_flag = 0;
-      g_load_info.work_data.end_time = g_device_info.running_time;
-      g_load_info.work_data.cycle_info = 1;
-      //printf("work_cycle_start_flag： %d\n",work_cycle_start_flag);
-    }
-  }
-}
-
-
-/**
- * @brief 计算载重相关数据
- */
-void compute_load_data(void)
-{
-  // 计算平均AD
-  g_load_info.average_ad = (g_load_info.adc1_data) / 2 + (g_load_info.adc2_data) / 2;
-
-  // 计算实际载重 大于空载AD 显示数据
-  if (g_load_info.average_ad > ram_flash_data.no_load_ad)
-  {
-    g_load_info.real_load = (g_load_info.average_ad - ram_flash_data.no_load_ad) / (ram_flash_data.per_kg_ad);
-  }
-  else
-  {
-    g_load_info.real_load = 0;
-  }
-
-  // 计算偏置率
-  compute_up_bias();
-
-  // 判断是否预报警
-  g_load_info.up_state = 0;
-  if (g_load_info.real_load > ram_flash_data.load_warn)
-  {
-    g_load_info.up_state = 1;
-  }
-  if (g_load_info.real_load > ram_flash_data.load_alarm)
-  {
-    g_load_info.up_state = 2;
-  }
-  // 工作循环
-  compute_work_cycle();
-}
-
-/**
  * @brief 初始化cs1238 
  * 
  */
 void new_cs1238_init(void)
 {
+    rcu_periph_clock_enable(CS123X_CLK1);
+
 	// 设置 cs1238时钟引脚 
 	set_sclk_mode_out();
 
@@ -574,169 +402,27 @@ void new_cs1238_init(void)
 	set_dout_mode_in();
 
 	// 上电所需最长建立时间
-	nrf_delay_ms(100);
+	delay_1ms(100);
 
 	// 传感器状态位 初始化正常
 	g_load_info.sensor_state = 0;
 
 	// 初始设置 通道A 读A操作
-	cs1238_state = operation_read_a;
 	set_cs1238_config(CHANNEL_A_CONFIG);
-
-  // 初始化检测传感器参数
-  error_adc1 = ram_flash_data.load_alarm * ram_flash_data.per_kg_ad * 1.2 - ram_flash_data.single_adc1;
-  error_adc2 = ram_flash_data.load_alarm * ram_flash_data.per_kg_ad * 1.2 - ram_flash_data.single_adc2;
-  error_adc1_num = 0;
-  right_adc1_num = CS1238_RIGHT_NUM;
-  error_adc2_num = 0;
-  right_adc2_num = CS1238_RIGHT_NUM;
-
+ 
 #ifdef CS1238_DEBUG
 	printf("cs1238 init ok\n");
 	#endif
 }
 
 /**
- * @brief 顺序读取CS1238 通道A 通道B ADC数值
+ * @brief 顺序读取CS1238 
  */
 void polling_read_cs1238_data(void)
 {
-	int32_t data_temp = 0;
-
-	switch (cs1238_state)
-	{
-	case operation_read_a:      // 读A通道 后状态切换为 设置B
-		data_temp = read_cs1238_ad_data();
-    compute_sensor_error(data_temp, 1);
-		if(data_temp == 1)
-		{
-			cs1238_state = operation_read_err;
-			#ifdef CS1238_DEBUG
-			printf("adc1 error\n");
-			#endif
-		}
-		else
-		{
-			if(filter_adc1_init < FILTER_N)
-			{
-				filter_adc1_buf[filter_adc1_init] = data_temp;
-				filter_adc1_init++;
-			}
-			else
-			{
-				g_load_info.adc1_data = filter_adc1(data_temp);
-				#ifdef CS1238_DEBUG
-				printf("adc1: %d\n", g_load_info.adc1_data);
-				#endif
-			}
-			cs1238_state = operation_select_b;
-		}
-		break;
-
-	case operation_select_b:   // 设置B 后状态切换为 读B通道	
-		if(set_cs1238_config(CHANNEL_B_CONFIG))
-		{
-			cs1238_state = operation_set_err;
-			#ifdef CS1238_DEBUG
-			printf("set B error\n");
-			#endif
-		}
-		else
-		{
-			if(filter_adc2_init >= FILTER_N )
-			{
-				compute_load_data();// 滤波初始化后开始计算
-			}
-			cs1238_state = operation_read_b;
-			cs1238_set_error_num = 0;
-		}
-		break;
-
-	case operation_read_b:    // 读B通道 后状态切换为 设置A
-		data_temp = read_cs1238_ad_data();
-    compute_sensor_error(data_temp, 2);
-		if(data_temp == 1)
-		{
-			cs1238_state = operation_read_err;
-			#ifdef CS1238_DEBUG
-			printf("adc2 error\n");
-			#endif
-		}
-		else
-		{
-			if(filter_adc2_init < FILTER_N)
-			{
-				filter_adc2_buf[filter_adc2_init] = data_temp;
-				filter_adc2_init++;
-			}
-			else
-			{
-				g_load_info.adc2_data = filter_adc2(data_temp);
-				#ifdef CS1238_DEBUG
-				printf("adc2: %d\n",g_load_info.adc2_data);
-				#endif				
-			}
-			cs1238_state = operation_select_a;
-		}
-		break;
-
-	case operation_select_a: // 设置A 后状态切换为 读A通道
-		if(set_cs1238_config(CHANNEL_A_CONFIG))
-		{	
-			cs1238_state = operation_set_err;
-			#ifdef CS1238_DEBUG
-			printf("set A error\n");
-			#endif
-		}
-		else
-		{
-			if(filter_adc2_init >= FILTER_N )
-			{
-				compute_load_data();// 滤波初始化后开始计算
-			}
-			cs1238_state = operation_read_a;
-			cs1238_set_error_num = 0;
-		}
-		break;
-
-	case operation_read_err: // 读错误状态处理
-		cs1238_set_error_num++;
-		if(cs1238_set_error_num >10)
-		{
-			cs1238_state = operation_cs1238_err;	
-		}
-		else
-		{
-			set_sclk_mode_out();
-			set_dout_mode_in();
-			cs1238_state = operation_read_a;
-		}
-		break;
-
-	case operation_set_err: // 设置错误状态处理
-		cs1238_set_error_num++;
-		if(cs1238_set_error_num >10)
-		{
-			cs1238_state = operation_cs1238_err;	
-		}
-		else
-		{
-			set_sclk_mode_out();
-			set_dout_mode_in();
-			cs1238_state = operation_select_a;
-		}
-		break;
-
-	case operation_cs1238_err:
-		g_load_info.sensor_state = 3;
-		cs1238_set_error_num = 0;
-		new_cs1238_init();
-		break;	
-
-	default:
-		break;
-	}
-
+    int data_temp = 0;
+    data_temp = read_cs1238_ad_data();
+    printf("adc: %d\n", data_temp);
 }
 
 /**
@@ -746,69 +432,4 @@ void polling_read_cs1238_data(void)
 void sleep_cs1238(void)
 {
 	IO_CLK_AD_H();
-}
-
-int temp_data = 0;		// 缓存称重数据
-int power_flag = 0;   // 延时计数
-int power_state = 1;	// 称重采样工作状态 0 低功率 1 高功率
-
-void low_power_read_cs1238(void)
-{
-  if (power_state) // 称重 高功率模式
-  {
-    power_flag++;
-    polling_read_cs1238_data(); // 称重采样
-
-    if (abs(temp_data - g_load_info.real_load) <= 2) // 称重稳定
-    {
-      if (power_flag > CS1238_LOW_TIME * 15) // 稳定15s 后进入低功耗
-      {
-        power_flag = 0;  // 清除延时累加
-        power_state = 0; // 开启低功耗
-      }
-      if (!(power_flag % 20)) // 由于滤波存在 因此1s刷新缓存 避免刷新过快误判为一直稳定
-      {
-        temp_data = g_load_info.real_load;
-      }
-    }
-    else // 称重不稳定
-    {
-      power_flag = 0;
-      temp_data = g_load_info.real_load;
-    }
-  }
-  else             // 称重 低功率模式
-  {
-    power_flag++;
-
-    if (power_flag <= CS1238_LOW_TIME * 1) // 低功率下 1s 采样 5s睡眠
-    {
-      polling_read_cs1238_data(); // 称重采集
-
-      if (!(power_flag % 20)) // 1s采集后进行判断 避免刷新过快误判为一直稳定
-      {
-        //printf("1:%d 2:%d\n", temp_data, g_load_info.real_load);
-        if (abs(temp_data - g_load_info.real_load) > 5) // 称重不稳定 超过5Kg唤醒
-        {
-          power_flag = 0;  // 清除延时累加
-          power_state = 1; // 开启高功耗
-        }
-        temp_data = g_load_info.real_load;
-      }
-    }
-    else if (power_flag > CS1238_LOW_TIME * ram_flash_data.weigh_sample_inv) // 一个周期结束 进入下一个周期
-    {
-      power_flag = 0;
-    }
-    else
-    {
-      sleep_cs1238(); // 称重进入休眠
-    }
-  }
-
-  // 检测蓝牙是否已连接 已连接情况下不进入低功耗
-  if (g_device_info.ble_status == 2)
-  {
-    power_state = 1; // 开启高功耗
-  }
 }

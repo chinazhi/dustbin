@@ -1,6 +1,8 @@
 #ifndef CS1238_H
 #define CS1238_H
 
+#include "type.h"
+
 #define CS1238_RIGHT_NUM 10            // 称重传感器连续成功次数
 #define CS1238_LOW_TIME  20            // 延时时间 50ms * 20 = 1s
 #define CHANNEL_A_CONFIG 0x14          // 通道1 2倍放大 40Hz
@@ -59,5 +61,4 @@ void new_cs1238_init(void);
  */
 void polling_read_cs1238_data(void);
 
-void low_power_read_cs1238(void);
 #endif

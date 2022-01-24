@@ -32,6 +32,13 @@ bsp_gpiox_param_t bsp_gpo_param[] =
     {(rcu_periph_enum)0, 0, 0, 0, 0}
 };
 
+bsp_gpiox_param_t bsp_gpi_param[] =
+{
+    {GPI0_CLK, GPI0_PORT, GPI0_PIN, GPI0_VALUE},
+    {(rcu_periph_enum)0, 0, 0, 0}
+};
+
+
 /**
  * @brief pull low the specified gpo
  * 
@@ -85,9 +92,30 @@ void bsp_gpo_init(uint8_t index)
     }
 }
 
+/**
+ * @brief 
+ * 
+ * @param[in] index 
+ */
+void bsp_gpi_init(uint8_t index)
+{
+    rcu_periph_clock_enable(bsp_gpi_param[index].gpiox_clk);
+    //rcu_periph_clock_enable(RCU_AF);
 
+    /* configure button pin as input */
+    gpio_init(bsp_gpi_param[index].gpio_port, bsp_gpi_param[index].gpio_value, GPIO_OSPEED_50MHZ, bsp_gpi_param[index].gpio_pin);
+}
 
-
+/**
+ * @brief 
+ * 
+ * @param[in] index 
+ * @return uint8_t 
+ */
+uint8_t bsp_gpi_state_get(uint8_t index)
+{
+    return gpio_input_bit_get(g_stBsp_GPI_Param[index].GPIO_Port, bsp_gpi_param[index].gpio_pin);
+}
 
 
 

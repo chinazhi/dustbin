@@ -83,7 +83,8 @@ void app_task_start(void *pvParameters)
 //    bsp_gpo_init(LED_ERROR);
       bsp_gpo_init(RS485_EN); 
       gpio_bit_write(GPIOA, GPIO_PIN_11, SET); 
-      bsp_uart0_init();
+      bsp_uart0_485_init();
+      bsp_uart1_232_init();
     //ds18b20_init();
 
     OSTaskCreate((OS_TCB *)&app_task_state_tcb,

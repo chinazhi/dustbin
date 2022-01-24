@@ -17,7 +17,7 @@
 #define DS18B20_PIN               GPIO_PIN_7
 #define DS18B20_VALUE             BSP_GPO_HI
 #define DS18B20_OUT_TYPE          GPIO_MODE_OUT_PP
-#define DS18B20_IN_TYPE           GPIO_MODE_IPD
+#define DS18B20_IN_TYPE           GPIO_MODE_IPU
 
 #define DS18B20_OUTPUT_MODE()     gpio_init(DS18B20_PORT, DS18B20_OUT_TYPE, GPIO_OSPEED_50MHZ, DS18B20_PIN)
 #define DS18B20_INPUT_MODE()      gpio_init(DS18B20_PORT, DS18B20_IN_TYPE, GPIO_OSPEED_50MHZ, DS18B20_PIN);
@@ -26,16 +26,6 @@
 #define DS18B20_OUT_LOW()         gpio_bit_write(DS18B20_PORT, DS18B20_PIN, RESET)
 
 #define DS18B20_IN_READ()         gpio_input_bit_get(DS18B20_PORT, DS18B20_PIN)
-
-void delay_us(int data)
-{
-    int i = 0;
-    for (i = 0; i < data; i++)
-    {
-       __NOP();
-    }
-    return;
-}
 
 /**
  * @brief DS18B20 BSP init
@@ -50,13 +40,13 @@ int ds18b20_init(void)
     rcu_periph_clock_enable(DS18B20_CLK); 
     DS18B20_OUTPUT_MODE(); // 进入输出模式
     DS18B20_OUT_LOW();     // 输出0 拉低 发送复位脉冲
-    delay_us(642);         // 642 延时（>480us <960us)
+    delay_1us(642);         // 642 延时（>480us <960us)
     DS18B20_OUT_HIGH();    // 输出1 拉高 Mark1
-    delay_us(30);          // 等待（15~60us)
+    delay_1us(30);          // 等待（15~60us)
     DS18B20_INPUT_MODE();  // 进入输入模式
     while (DS18B20_IN_READ() == 1)
     { //收到低电平则存在，否则循环5ms告诉不存在,应答是在60-240微秒
-        delay_us(1000);
+        delay_1us(1000);
         i++;
         if (i > 5)
         {
@@ -78,7 +68,7 @@ void ds18b20_write_byte(unsigned char dat)
     for (i = 0; i < 8; i++)
     {
         DS18B20_OUT_LOW();     // 进入写时序拉低
-        delay_us(15);          // 写入时先拉低大于15微秒
+        delay_1us(15);          // 写入时先拉低大于15微秒
         if(dat & 0x01)         // 写入0或1
         {
             DS18B20_OUT_HIGH();
@@ -87,7 +77,7 @@ void ds18b20_write_byte(unsigned char dat)
         {
             DS18B20_OUT_LOW();
         }
-        delay_us(60);          // 写入1或0时都需要至少60微秒的间隙
+        delay_1us(60);          // 写入1或0时都需要至少60微秒的间隙
         DS18B20_OUT_HIGH();    // 再拉高恢复可写状态
         dat >>= 1;             // 一共8位右移一位把下一位数据放在最右边
     }
@@ -106,13 +96,13 @@ unsigned char ds18b20_read_byte(void)
     {
         DS18B20_OUTPUT_MODE();
         DS18B20_OUT_LOW();    // 看读时序
-        delay_us(1);          // 拉低延迟1微秒
+        delay_1us(1);          // 拉低延迟1微秒
         DS18B20_OUT_HIGH();
-        delay_us(10);         // 进入读的准备阶段10微秒
+        delay_1us(10);         // 进入读的准备阶段10微秒
         DS18B20_INPUT_MODE();
         dat = DS18B20_IN_READ();
         byte = (byte >> 1) | (dat << 7);
-        delay_us(45);         // 延迟45微秒读完1位
+        delay_1us(45);         // 延迟45微秒读完1位
         DS18B20_OUTPUT_MODE();
         DS18B20_OUT_HIGH();   // 继续拉高为读下一位做准备
     }
@@ -122,7 +112,7 @@ unsigned char ds18b20_read_byte(void)
 void ds18b20_change_temp()
 {
     ds18b20_init();
-    delay_us(1000);
+    delay_1us(1000);
     ds18b20_write_byte(0xcc); //跳过ROM直接发送温度转换命令
     ds18b20_write_byte(0x44); //发送指令RAM设为0x44为温度变换
 }
@@ -130,7 +120,7 @@ void ds18b20_change_temp()
 void ds18b20_read_temp_com()
 {
     ds18b20_init();
-    delay_us(1000);
+    delay_1us(1000);
     ds18b20_write_byte(0xcc); //跳过ROM直接发送温度转换命令
     ds18b20_write_byte(0xbe); //发送指令RAM设为0xBE为读暂时寄存器
 }

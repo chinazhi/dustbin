@@ -48,7 +48,7 @@ void uart_send_str_pack(uint32_t usart_periph, char const *pucStr, uint16_t ulNu
 }
 
 
-void bsp_uart0_init(void)
+void bsp_uart0_485_init(void)
 {
     /* enable GPIO clock */
     rcu_periph_clock_enable(RCU_GPIOA);
@@ -73,7 +73,7 @@ void bsp_uart0_init(void)
 }
 
 
-void bsp_uart1_init(void)
+void bsp_uart1_232_init(void)
 {
     /* enable GPIO clock */
     rcu_periph_clock_enable(RCU_GPIOA);

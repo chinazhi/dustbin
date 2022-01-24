@@ -40,14 +40,18 @@ void systick_config(void)
 void delay_1ms(uint32_t count)
 {
     unsigned char i, j, k;
+    CPU_SR_ALLOC();
+    OS_CRITICAL_ENTER();
+
     for (i = 288; i > 0; i--)
     {
         for (j = 10; j > 0; j--)
         {
-            for (k = count; j > 0; j--)
+            for (k = count; k > 0; k--)
                 ;
         }
     }
+    OS_CRITICAL_EXIT();
     // delay = count;
 
     // while(0U != delay){
@@ -65,4 +69,20 @@ void delay_decrement(void)
     if (0U != delay){
         delay--;
     }
+}
+
+void delay_1us(unsigned int data)
+{
+    unsigned int i, j;
+
+    CPU_SR_ALLOC();
+    OS_CRITICAL_ENTER();
+    for (i = 28; i > 0; i--)
+    {
+        for (j = data; j > 0; j--)
+        {
+            ;
+        }
+    }
+    OS_CRITICAL_EXIT();
 }
