@@ -29,12 +29,21 @@ bsp_gpiox_param_t bsp_gpo_param[] =
     {GPO3_CLK, GPO3_PORT, GPO3_PIN, GPO3_VALUE, GPO3_OTYPE},
     {GPO4_CLK, GPO4_PORT, GPO4_PIN, GPO4_VALUE, GPO4_OTYPE},
     {GPO5_CLK, GPO5_PORT, GPO5_PIN, GPO5_VALUE, GPO5_OTYPE},
+    {GPO6_CLK, GPO6_PORT, GPO6_PIN, GPO6_VALUE, GPO6_OTYPE},
+    {GPO7_CLK, GPO7_PORT, GPO7_PIN, GPO7_VALUE, GPO7_OTYPE},
+    {GPO8_CLK, GPO8_PORT, GPO8_PIN, GPO8_VALUE, GPO8_OTYPE},
+    {GPO9_CLK, GPO9_PORT, GPO9_PIN, GPO9_VALUE, GPO9_OTYPE},                 
     {(rcu_periph_enum)0, 0, 0, 0, 0}
 };
 
 bsp_gpiox_param_t bsp_gpi_param[] =
 {
     {GPI0_CLK, GPI0_PORT, GPI0_PIN, GPI0_VALUE},
+    {GPI1_CLK, GPI1_PORT, GPI1_PIN, GPI1_VALUE},
+    {GPI2_CLK, GPI2_PORT, GPI2_PIN, GPI2_VALUE},
+    {GPI3_CLK, GPI3_PORT, GPI3_PIN, GPI3_VALUE},
+    {GPI4_CLK, GPI4_PORT, GPI4_PIN, GPI4_VALUE},
+    {GPI5_CLK, GPI5_PORT, GPI5_PIN, GPI5_VALUE},           
     {(rcu_periph_enum)0, 0, 0, 0}
 };
 
@@ -97,7 +106,7 @@ void bsp_gpo_init(uint8_t index)
  * 
  * @param[in] index 
  */
-void bsp_gpi_init(uint8_t index)
+void bsp_gpi_poll_init(uint8_t index)
 {
     rcu_periph_clock_enable(bsp_gpi_param[index].gpiox_clk);
     //rcu_periph_clock_enable(RCU_AF);
@@ -114,7 +123,7 @@ void bsp_gpi_init(uint8_t index)
  */
 uint8_t bsp_gpi_state_get(uint8_t index)
 {
-    return gpio_input_bit_get(g_stBsp_GPI_Param[index].GPIO_Port, bsp_gpi_param[index].gpio_pin);
+    return gpio_input_bit_get(bsp_gpi_param[index].gpio_port, bsp_gpi_param[index].gpio_pin);
 }
 
 

@@ -133,10 +133,7 @@ void DebugMon_Handler(void)
 */
 void SysTick_Handler(void)
 {
-    if (0U != s_delay)
-    {
-        s_delay--;
-    }
+    delay_decrement();
 
     if (1 == OSRunning)
     {
@@ -144,5 +141,4 @@ void SysTick_Handler(void)
         OSTimeTick();
         OSIntExit();
     }
-    //delay_decrement();
 }

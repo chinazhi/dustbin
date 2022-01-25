@@ -10,6 +10,7 @@
  */
 #include "bsp_adc.h"
 #include "gd32f30x.h"
+#include "systick.h"
 
 uint16_t adc_value;
 
@@ -90,7 +91,7 @@ void adc_config(void)
     adc_channel_length_config(ADC0, ADC_REGULAR_CHANNEL, 1);   // ADC 通道数在此配置
 
     /* ADC regular channel config */ 
-    adc_regular_channel_config(ADC0, 10, ADC_CHANNEL_10, ADC_SAMPLETIME_55POINT5); // 通道属性在此配置
+    adc_regular_channel_config(ADC0, 0, ADC_CHANNEL_10, ADC_SAMPLETIME_55POINT5); // 通道属性在此配置
    
     /* ADC trigger config */
     adc_external_trigger_source_config(ADC0, ADC_REGULAR_CHANNEL, ADC0_1_2_EXTTRIG_REGULAR_NONE);

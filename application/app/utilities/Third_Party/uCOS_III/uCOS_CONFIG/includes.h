@@ -70,6 +70,7 @@
 #include "bsp_bs18b20.h"
 #include "bsp_adc.h"
 
-
+#include "type.h"
+#include "common.h"
 
 #endif

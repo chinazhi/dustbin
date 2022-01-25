@@ -11,7 +11,7 @@
 #include "gd32f30x.h"
 #include "systick.h"
 
-volatile static uint32_t delay;
+volatile static uint32_t s_delay = 0;
 
 /*!
     \brief      configure systick
@@ -39,23 +39,11 @@ void systick_config(void)
 */
 void delay_1ms(uint32_t count)
 {
-    unsigned char i, j, k;
-    CPU_SR_ALLOC();
-    OS_CRITICAL_ENTER();
+    s_delay = count;
 
-    for (i = 288; i > 0; i--)
+    while (0U != s_delay)
     {
-        for (j = 10; j > 0; j--)
-        {
-            for (k = count; k > 0; k--)
-                ;
-        }
     }
-    OS_CRITICAL_EXIT();
-    // delay = count;
-
-    // while(0U != delay){
-    // }
 }
 
 /*!
@@ -66,8 +54,9 @@ void delay_1ms(uint32_t count)
 */
 void delay_decrement(void)
 {
-    if (0U != delay){
-        delay--;
+    if (0U != s_delay)
+    {
+        s_delay--;
     }
 }
 
@@ -75,8 +64,8 @@ void delay_1us(unsigned int data)
 {
     unsigned int i, j;
 
-    CPU_SR_ALLOC();
-    OS_CRITICAL_ENTER();
+    //CPU_SR_ALLOC();
+    //OS_CRITICAL_ENTER();
     for (i = 28; i > 0; i--)
     {
         for (j = data; j > 0; j--)
@@ -84,5 +73,5 @@ void delay_1us(unsigned int data)
             ;
         }
     }
-    OS_CRITICAL_EXIT();
+    //OS_CRITICAL_EXIT();
 }

@@ -37,7 +37,7 @@ int main(void)
     nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);
     // enable clock
     rcu_periph_clock_enable(RCU_PMU);
-    
+    // config os clock
     SysTick_Config(SystemCoreClock / OS_CFG_TICK_RATE_HZ);
     
     OSInit(&err);
@@ -75,17 +75,8 @@ void app_task_start(void *pvParameters)
     OS_ERR err;
 
     OSStatTaskCPUUsageInit((OS_ERR *)&err);
-    
-    bsp_gpo_init(LED_A0);
-//    bsp_gpo_init(LED_A1);
-//    bsp_gpo_init(LED_A2);
-//    bsp_gpo_init(LED_COM);
-//    bsp_gpo_init(LED_ERROR);
-      bsp_gpo_init(RS485_EN); 
-      gpio_bit_write(GPIOA, GPIO_PIN_11, SET); 
-      bsp_uart0_485_init();
-      bsp_uart1_232_init();
-    //ds18b20_init();
+
+    system_hw_init();
 
     OSTaskCreate((OS_TCB *)&app_task_state_tcb,
                  (CPU_CHAR *)"monitoring application status",
@@ -109,8 +100,6 @@ void app_task_start(void *pvParameters)
     }
 }
 
-float my_temp;
-
 /**
  * @brief task
  * 
@@ -122,13 +111,7 @@ void app_task_state(void *pvParameters)
     
     while (1)
     {
-        bsp_gpo_toggle(LED_A0);
-//        bsp_gpo_toggle(LED_A1);
-//        bsp_gpo_toggle(LED_A2);
-//        bsp_gpo_toggle(LED_ERROR);
-//        bsp_gpo_toggle(LED_COM);
-        //my_temp = ds18b20_read_temp();
-        printf("0102030405\r\n");
+        hardware_function_test();
         OSTimeDlyHMSM(0, 0, 1, 0, OS_OPT_TIME_PERIODIC, &err);
     }
 }
