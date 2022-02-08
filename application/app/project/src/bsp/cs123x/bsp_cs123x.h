@@ -1,5 +1,5 @@
-#ifndef CS1238_H
-#define CS1238_H
+#ifndef BSP_CS123X_H
+#define BSP_CS123X_H
 
 #include "type.h"
 
@@ -19,17 +19,6 @@ typedef enum
     operation_set_err
 }operation_cs1238_state;
 
-typedef struct 
-{
-  uint8_t  cycle_info;     // 工作循环 信息 0 无工作循环 1有工作循环
-
-  int32_t  max_load; 
-  int32_t  max_up_bias;    // 最大 偏置值
-  int32_t  up_state;       // 工作循环期间 载重状态 0 normal 1 warnning 2 alarm
-  uint32_t start_time;	   // 开始时间   
-  uint32_t end_time;	     // 结束时间  
-}work_cycle;
-
 typedef struct
 {
   int32_t adc1_data;       // 通道1 ADC数值
@@ -41,7 +30,6 @@ typedef struct
   int32_t up_state;        // 载重状态 0 normal 1 warnning 2 alarm
 
   int32_t sensor_state;    // 传感器状态 0 正常 1 右异常 2 左异常 3 芯片异常
-  work_cycle work_data;    // 工作循环数据
 } cs1238_load_info_t;
 
 /**

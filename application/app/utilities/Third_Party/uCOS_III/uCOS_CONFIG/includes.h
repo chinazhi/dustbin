@@ -63,14 +63,16 @@
 #include "gd32f30x.h"
 #include "gd32f30x_it.h"
 
-
 #include "main.h"
 #include "bsp_uart.h"
 #include "bsp_gpio.h"
 #include "bsp_bs18b20.h"
 #include "bsp_adc.h"
+#include "bsp_cs123x.h"
 
 #include "type.h"
 #include "common.h"
+
+#include "task_input.h"
 
 #endif

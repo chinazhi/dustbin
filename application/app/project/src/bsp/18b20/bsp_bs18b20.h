@@ -6,14 +6,16 @@
  * 
  * @return int 0 error 1 success
  */
-int ds18b20_init(void);
+uint8_t DS18B20_Init(void);
+//int ds18b20_init(void);
 
 /**
  * @brief read temp
  * 
  * @return float 
  */
-float ds18b20_read_temp(void);
+float DS18B20_GetTemp_SkipRom(void);
+//float ds18b20_read_temp(void);
 
 #endif
 

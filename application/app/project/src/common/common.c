@@ -53,8 +53,10 @@ void system_hw_init(void)
     bsp_uart0_485_init();
     bsp_uart1_232_init();
     // ds18b20_init();
-
+    DS18B20_Init();
     motor_power_adc_init();
+
+    new_cs1238_init();
 }
 
 float my_temp = 0;
@@ -119,6 +121,7 @@ void hardware_function_test(void)
     zgg_gpi_test();
 
     // my_temp = ds18b20_read_temp();
+    printf ("temp: %.1f\r\n",DS18B20_GetTemp_SkipRom());
 
-    printf("function %04X\r\n", adc_value);
+    polling_read_cs1238_data();
 }

@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,GD32F30X_CL</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\library\firmware\CMSIS;..\..\..\library\firmware\CMSIS\GD\GD32F30x\Include;..\..\..\library\firmware\CMSIS\GD\GD32F30x\Source\ARM;..\..\..\library\firmware\GD32F30x_standard_peripheral\Include;..\..\utilities\Third_Party\uCOS_III\uC-CPU;..\..\utilities\Third_Party\uCOS_III\uC-CPU\ARM-Cortex-M4\RealView;..\..\utilities\Third_Party\uCOS_III\uC-LIB;..\..\utilities\Third_Party\uCOS_III\uC-LIB\Ports;..\..\utilities\Third_Party\uCOS_III\uC-LIB\Ports\ARM-Cortex-M4\RealView;..\..\utilities\Third_Party\uCOS_III\uCOS-III\Ports\ARM-Cortex-M4\Generic\RealView;..\..\utilities\Third_Party\uCOS_III\uCOS-III\Source;..\..\utilities\Third_Party\uCOS_III\uCOS_BSP;..\..\utilities\Third_Party\uCOS_III\uCOS_CONFIG;..\..\utilities;..\inc;..\src;..\src\bsp\uart;..\src\bsp\gpio;..\src\bsp\adc;..\src\bsp\18b20;..\src\common</IncludePath>
+              <IncludePath>..\..\..\library\firmware\CMSIS;..\..\..\library\firmware\CMSIS\GD\GD32F30x\Include;..\..\..\library\firmware\CMSIS\GD\GD32F30x\Source\ARM;..\..\..\library\firmware\GD32F30x_standard_peripheral\Include;..\..\utilities\Third_Party\uCOS_III\uC-CPU;..\..\utilities\Third_Party\uCOS_III\uC-CPU\ARM-Cortex-M4\RealView;..\..\utilities\Third_Party\uCOS_III\uC-LIB;..\..\utilities\Third_Party\uCOS_III\uC-LIB\Ports;..\..\utilities\Third_Party\uCOS_III\uC-LIB\Ports\ARM-Cortex-M4\RealView;..\..\utilities\Third_Party\uCOS_III\uCOS-III\Ports\ARM-Cortex-M4\Generic\RealView;..\..\utilities\Third_Party\uCOS_III\uCOS-III\Source;..\..\utilities\Third_Party\uCOS_III\uCOS_BSP;..\..\utilities\Third_Party\uCOS_III\uCOS_CONFIG;..\..\utilities;..\inc;..\src;..\src\common;..\src\bsp\uart;..\src\bsp\gpio;..\src\bsp\adc;..\src\bsp\18b20;..\src\bsp\cs123x;..\src\task</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -401,6 +401,11 @@
               <FileType>1</FileType>
               <FilePath>..\src\common\common.c</FilePath>
             </File>
+            <File>
+              <FileName>task_input.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\task\task_input.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -425,6 +430,11 @@
               <FileName>bsp_bs18b20.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\bsp\18b20\bsp_bs18b20.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_cs123x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\bsp\cs123x\bsp_cs123x.c</FilePath>
             </File>
           </Files>
         </Group>
