@@ -52,14 +52,11 @@ void system_hw_init(void)
     bsp_gpo_init(RS485_EN);
     bsp_uart0_485_init();
     bsp_uart1_232_init();
-    // ds18b20_init();
     DS18B20_Init();
     motor_power_adc_init();
 
     new_cs1238_init();
 }
-
-float my_temp = 0;
 
 void zgg_gpo_test(void)
 {
@@ -70,8 +67,6 @@ void zgg_gpo_test(void)
     bsp_gpo_high(DO_FAN_EN);
     bsp_gpo_high(DO_LIGHT_EN);
 }
-
-
 
 void zgg_gpi_test(void)
 {
@@ -117,11 +112,12 @@ void zgg_gpi_test(void)
 void hardware_function_test(void)
 {
     bsp_gpo_toggle(LED_A0);
-    zgg_gpo_test();
-    zgg_gpi_test();
+    // zgg_gpo_test();
+    // zgg_gpi_test();
+    //CPU_SR_ALLOC();
+    //OS_CRITICAL_ENTER();
 
-    // my_temp = ds18b20_read_temp();
-    printf ("temp: %.1f\r\n",DS18B20_GetTemp_SkipRom());
-
-    polling_read_cs1238_data();
+    //printf("temp: %f\r\n", DS18B20_GetTemp_SkipRom());
+    //polling_read_cs1238_data();
+    //OS_CRITICAL_EXIT();
 }

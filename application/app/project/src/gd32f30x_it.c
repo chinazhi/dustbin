@@ -59,6 +59,10 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
     /* if Hard Fault exception occurs, go to infinite loop */
+    if (CoreDebug->DHCSR & 1)
+    {                    // check C_DEBUGEN == 1 -> Debugger Connected
+        __breakpoint(0); // halt program execution here
+    }
     printf("[HardFault_Handler]\r\n");
     NVIC_SystemReset();
     while (1)

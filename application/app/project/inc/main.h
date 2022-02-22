@@ -14,7 +14,7 @@
 
 // UCOS III TASK PRIORITIES
 #define APP_TASK_START_PRIO              (OS_CFG_PRIO_MAX - 4u)
-#define APP_TASK_STATE_PRIO              10u
+#define APP_TASK_STATE_PRIO              15u
 #define APP_TASK_INPUT_PRIO              20u
 
 

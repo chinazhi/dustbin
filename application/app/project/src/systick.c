@@ -64,8 +64,6 @@ void delay_1us(unsigned int data)
 {
     unsigned int i, j;
 
-    //CPU_SR_ALLOC();
-    //OS_CRITICAL_ENTER();
     for (i = 28; i > 0; i--)
     {
         for (j = data; j > 0; j--)
@@ -73,5 +71,4 @@ void delay_1us(unsigned int data)
             ;
         }
     }
-    //OS_CRITICAL_EXIT();
 }
