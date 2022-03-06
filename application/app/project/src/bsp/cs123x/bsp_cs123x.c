@@ -122,6 +122,10 @@ int32_t read_cs1238_ad_data(void)
         }
     }
 
+//    OS_ERR err;
+//    __disable_irq();
+//    OSSchedLock(&err);
+
     /* 1: clk1 ~ clk24 ADC数据*/
     data_temp = 0;
     for (bit_cout = 0; bit_cout < 24; bit_cout++)
@@ -145,6 +149,9 @@ int32_t read_cs1238_ad_data(void)
         return -(((~data_temp) & 0x007FFFFF) + 1); // 补码变源码
     }
 
+//    OSSchedUnlock(&err);
+//    __enable_irq();
+    
    return data_temp; // 正数的补码就是源码
 }
 

@@ -1,6 +1,6 @@
 /**
  * @file bsp_adc.c
- * @author zgg (geng_zhi@hikchina.com)
+ * @author
  * @brief 
  * @version 1.0.0
  * @date 2022-01-20

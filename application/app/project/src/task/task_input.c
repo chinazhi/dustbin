@@ -30,11 +30,11 @@ void app_task_input(void *p_arg)
     // }
     
 
-    printf("function %04X\r\n", adc_value);
+    printf("a %04X\r\n", adc_value);
     //printf("This is a input collection task\n");
 
     // OSSemPost(&SemInput, OS_OPT_POST_ALL, &err);
-    OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_DLY, &err); 
+    OSTimeDlyHMSM(0, 0, 0, 100, OS_OPT_TIME_DLY, &err); 
   }
 }
 

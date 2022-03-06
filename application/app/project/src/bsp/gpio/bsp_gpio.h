@@ -62,7 +62,7 @@
 #define GPO7_PIN                  GPIO_PIN_14
 #define GPO7_VALUE                BSP_GPO_HI
 #define GPO7_OTYPE                GPIO_MODE_OUT_PP
-
+//ÂúÒçÊä³ö
 #define FULL_OUT_EN               8 
 #define GPO8_CLK                  RCU_GPIOE        
 #define GPO8_PORT                 GPIOE
@@ -76,6 +76,21 @@
 #define GPO9_PIN                  GPIO_PIN_6
 #define GPO9_VALUE                BSP_GPO_HI
 #define GPO9_OTYPE                GPIO_MODE_OUT_PP
+
+// µç»ú 1 
+#define MOTOR_INR1_EN             10 
+#define GPO10_CLK                 RCU_GPIOB        
+#define GPO10_PORT                GPIOB
+#define GPO10_PIN                 GPIO_PIN_10
+#define GPO10_VALUE               BSP_GPO_HI
+#define GPO10_OTYPE               GPIO_MODE_OUT_PP
+
+#define MOTOR_INF1_EN             11 
+#define GPO11_CLK                 RCU_GPIOB        
+#define GPO11_PORT                GPIOB
+#define GPO11_PIN                 GPIO_PIN_11
+#define GPO11_VALUE               BSP_GPO_LO
+#define GPO11_OTYPE               GPIO_MODE_OUT_PP
 
 
 /*********************** GPI ***************************/
@@ -103,7 +118,7 @@
 #define GPI3_PORT                 GPIOC
 #define GPI3_PIN                  GPIO_PIN_7
 #define GPI3_VALUE                GPIO_MODE_IN_FLOATING
-// ÂúÒç
+// ÂúÒç ¼ì²â
 #define FULL_IN_EN                4
 #define GPI4_CLK                  RCU_GPIOD       
 #define GPI4_PORT                 GPIOD
